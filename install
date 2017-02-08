@@ -1,0 +1,79 @@
+#!/bin/bash
+# DeployTool Install File ##
+# Author : Abhis27.Github.Io
+
+## Color Definitions ##
+colred='\e[31m'		# Red
+colgrn='\e[32m'		# Green
+colmag='\e[35m'		# Magenta
+coldef='\e[39m'		# Default
+
+## Validations ##
+ops_dir="/opt/abhis27/deploy"
+[[ "$(pwd)" != "$ops_dir" ]] && { echo -e "$colred\r[-] Please cd to $ops_dir & then Run$coldef $0" ; exit 1 ; }
+[[ "$(id -u)"  != "0" ]] && { echo -e "$colred\r[-] Please Run From Root Access.$coldef" ; exit 1 ; }
+
+dist="$(cat /etc/os-release|grep ID_LIKE|cut -d '=' -f2|grep -o 'rhel\|debi')"
+webuser="$(cat /etc/passwd | grep "/var/www" | cut -d ':' -f1 | head -1)"
+
+[[ "$dist" = "debi" ]] && {
+echo -e "$colgrn\r[+] Debian Based Distro Detected .$coldef"
+http_pkg="sudo apt install apache2"
+[[ -z "$webuser" ]] && {  echo -e "$colred\r [-] Whereis Apache??\n\t Try Running => $http_pkg $coldef" ; exit 1 ; }
+src="."
+}
+
+[[ "$dist" = "rhel" ]] && {
+echo -e "$colgrn\r[+] RedHat Based Distro Detected .$coldef"
+http_pkg="sudo yum install httpd"
+[[ -z "$webuser" ]] && { echo -e "$colred\r [-] Whereis Apache??\n\t Try Running => $http_pkg $coldef" ; exit 1 ; }
+src="source"
+}
+
+cd "$ops_dir"
+$src "$ops_dir/setupvars.conf"
+git config --global user.name  "$deploy_admin_name"
+git config --global user.email "$deploy_admin_mail"
+git config --global core.filemode false
+
+[[ -f "/root/.ssh/config" ]] || { mkdir -p "/root/.ssh" ; chmod 700 "/root/.ssh" ; cp "/root/.ssh/config" "/root/.ssh/config_bkp_$(date +%F_%T)" ; }
+
+keyname="`hostname`+`dig +short myip.opendns.com @resolver1.opendns.com`.pem"
+[[ -f "$ops_dir/confs/deploykeys/$keyname" ]] || { ssh-keygen -t rsa -N "" -f "$ops_dir/confs/deploykeys/$keyname" > /dev/null ; }
+chmod 400 $ops_dir/confs/deploykeys/*pem
+
+sed -i '/## DeployTool Config Start ##/,/## DeployTool Config End ##/d' /root/.ssh/config
+keytext="## DeployTool Config Start ##
+Host $deploy_host_name
+ RSAAuthentication yes
+ StrictHostKeyChecking No
+ IdentityFile $ops_dir/confs/deploykeys/$keyname
+## DeployTool Config End ##"
+echo "$keytext" >> /root/.ssh/config
+chmod 600 /root/.ssh/config
+echo -e "$colgrn\r[+] Your Deploy Key Is Saved To File : $colmag$ops_dir/confs/deploykeys/$keyname.pub$coldef"
+echo -e "$colgrn\r[+] You Should Copy The Following key :$coldef"
+echo ""
+cat "$ops_dir/confs/deploykeys/$keyname.pub"
+echo ""
+echo -e "$colgrn\r[+] And Paste It To SSH Keys of Deploy User $coldef"
+
+rm -f /etc/init.d/deploy.* /etc/*.deploy.conf /etc/logrotate.d/*.deploy "/usr/sbin/deploy.tool" "/usr/sbin/deploy.bash"
+sed -i "s|examplewebuser|$webuser|g" $ops_dir/bins/deploy.bash
+sed -i "s|'examplesrc'|'$src'|g" $ops_dir/bins/deploy.bash
+ln -s "$ops_dir/confs/main.conf" "/etc/web.deploy.conf"
+ln -s "$ops_dir/confs/logrotate.conf" "/etc/logrotate.d/web.deploy"
+ln -s "$ops_dir/bins/deploy.bash" "/usr/sbin/deploy.bash"
+
+sed -i '/deploy/d' /etc/rc.local ; sed -i  '/deploy.bash/d' /etc/rc.local
+echo 'sleep 30 && /opt/abhis27/deploy/bins/deploy.bash start & ' >> /etc/rc.local
+sed -i '/exit 0/d' /etc/rc.local && echo 'exit 0' >> /etc/rc.local
+echo "" >> /etc/rc.local
+
+mkdir -p /var/log/deploy
+
+git remote remove origin
+git add . 
+git commit -am "`date` Saved DeployTool Install @ `hostname`" > /dev/null
+exit 0
+## E O F ##
