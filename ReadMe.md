@@ -1,24 +1,23 @@
 Installation
 -
 ```
-# mkdir /opt/abhis27 ; cd /opt/abhis27  
-# git clone https://github.com/abhis27/deploy.git  
-# cd deploy  
-# vim setupvars.conf		## Fill All The Fields ##
-# bash install  
+# mkdir /opt/abhis27 ; cd /opt/abhis27
+# git clone https://github.com/abhis27/deploy.git
+# cd deploy
+# vim setupvars.conf            ## Fill All The Fields ##
+# bash install
 ```
-    
+
 Config
 -
 ```
 # vim /etc/web.deploy.conf
 ```
-    
+
 Usage
 -
 ```
-# deploy.bash < start / stop > 
+# deploy.bash < start / stop >
 ```
-> Have a Nice Time !!!
+> [[ LICENSE ]](http://www.wtfpl.net/txt/copying/)
 
-[[ LICENSE ]](http://www.wtfpl.net/txt/copying/)
