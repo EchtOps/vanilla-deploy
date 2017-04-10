@@ -76,7 +76,7 @@ do
                                 sleep 60
 			fi
 		}
-		find $path ! -user $webuser -amin -5 -exec chown -R $user.$webuser {} \;
+		find $path -user root -amin -10 -exec chown -R $user.$webuser {} \;
 	done >> "$logfile" &
 
 done
