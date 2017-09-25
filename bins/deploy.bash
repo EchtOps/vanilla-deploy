@@ -49,11 +49,12 @@ $src $ops_dir/../confs/main.conf
 
 deploy_main()
 {
-for user in "${!git[@]}"
+for num in "${!git[@]}"
 do
-	branchpath=${git[$user]}
+	branchpath=${git[$num]}
 	branch="$(echo $branchpath | cut -d: -f1)"
 	path="$(echo $branchpath | cut -d: -f2)"
+	user="$(echo $branchpath | cut -d: -f3)"
 
 	cd $path
 	rm -f .git/*.lock
@@ -76,7 +77,12 @@ do
                                 sleep 60
 			fi
 		}
-		find $path -user root -amin -10 -exec chown -R $user.$webuser {} \;
+
+		## Comment the following if your all projects are deployed from root user, Just for Dev Modes ##
+		if [[ $user != "root" ]] ; then
+			find $path -user root -amin -10 -exec chown -R $user.$webuser {} \;
+		fi
+
 	done >> "$logfile" &
 
 done
@@ -87,4 +93,4 @@ deploy_main  2>>  "$logfile"
 echo "[+] `date` : DeployTool Started" >> "$logfile"
 echo -ne "\n\e[36m[+]\e[0m Deployment [\e[32mStarted\e[0m] on `date` \n    LogFile => \e[35m$logfile\e[0m\n"
 
-## E O F ##
+## Thats All Folks ##
