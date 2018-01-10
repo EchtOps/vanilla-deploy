@@ -19,5 +19,5 @@ Usage
 ```
 # deploy.bash < start / stop >
 ```
-> [[ LICENSE ]](http://www.wtfpl.net/txt/copying/)
+> [[ LICENSE ]](https://raw.githubusercontent.com/tech-alchemist/deploy/master/LICENSE)
 
