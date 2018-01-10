@@ -1,7 +1,7 @@
 Installation
 -
 ```
-# mkdir /opt/abhis27 ; cd /opt/abhis27
+# mkdir /opt/opsworks ; cd /opt/opsworks
 # git clone https://github.com/tech-alchemist/deploy.git
 # cd deploy
 # vim setupvars.conf            ## Fill All The Fields ##

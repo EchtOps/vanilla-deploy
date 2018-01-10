@@ -1,11 +1,11 @@
 #!/bin/bash
-# Author : Abhis27.Github.Io
+# Author : Tech-Alchemist.Github.Io
 # deploy.bash : Start/Stop the Deployment.
 
 ## Root Check ##
 [[ "$(id -u)"  != "0" ]] && { echo "[-] Please Run From Root Access." ; exit 1 ;}
 
-ops_dir="/opt/abhis27/deploy/bins"
+ops_dir="/opt/opsworks/deploy/bins"
 logfile="/var/log/deploy/deploy.log"
 cd $ops_dir
 

@@ -1,6 +1,6 @@
 #!/bin/bash
+# Author : Tech-Alchemist.Github.Io
 # DeployTool Install File ##
-# Author : Abhis27.Github.Io
 
 ## Color Definitions ##
 colred='\e[31m'		# Red
@@ -9,7 +9,8 @@ colmag='\e[35m'		# Magenta
 coldef='\e[39m'		# Default
 
 ## Validations ##
-ops_dir="/opt/abhis27/deploy"
+ops_dir="/opt/opsworks/deploy"
+
 [[ "$(pwd)" != "$ops_dir" ]] && { echo -e "$colred\r[-] Please cd to $ops_dir & then Run$coldef $0" ; exit 1 ; }
 [[ "$(id -u)"  != "0" ]] && { echo -e "$colred\r[-] Please Run From Root Access.$coldef" ; exit 1 ; }
 
@@ -66,7 +67,7 @@ ln -s "$ops_dir/confs/logrotate.conf" "/etc/logrotate.d/web.deploy"
 ln -s "$ops_dir/bins/deploy.bash" "/usr/sbin/deploy.bash"
 
 sed -i '/deploy/d' /etc/rc.local ; sed -i  '/deploy.bash/d' /etc/rc.local
-echo 'sleep 30 && /opt/abhis27/deploy/bins/deploy.bash start & ' >> /etc/rc.local
+echo "sleep 30 && ${ops_dir}/bins/deploy.bash start & " >> /etc/rc.local
 sed -i '/exit 0/d' /etc/rc.local && echo 'exit 0' >> /etc/rc.local
 echo "" >> /etc/rc.local
 
