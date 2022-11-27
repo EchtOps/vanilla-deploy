@@ -1,9 +1,13 @@
+This tool auto pulls code from git origins after the specific interval, to keep the vanilla deployments up to date.
+
+
 Installation
 -
 ```
-# mkdir /opt/opsworks ; cd /opt/opsworks
-# git clone https://github.com/tech-alchemist/deploy.git
-# cd deploy
+$ sudo su
+# mkdir -p /opt/echtops ; cd /opt/echtops
+# git clone https://github.com/tech-alchemist/vanilla-deploy.git vanilla-deploy
+# cd vanilla-deploy
 # vim setupvars.conf            ## Fill All The Fields ##
 # bash install
 ```
@@ -11,7 +15,7 @@ Installation
 Config
 -
 ```
-# vim /etc/web.deploy.conf
+# vim /etc/vanilla-deploy.conf
 ```
 
 Usage
@@ -19,5 +23,4 @@ Usage
 ```
 # deploy.bash < start / stop >
 ```
-> [[ LICENSE ]](https://raw.githubusercontent.com/tech-alchemist/deploy/master/LICENSE)
-
+> [[ LICENSE ]](https://raw.githubusercontent.com/echtops/vanilla-deploy/master/LICENSE)

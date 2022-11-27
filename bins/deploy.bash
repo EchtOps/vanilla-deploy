@@ -1,12 +1,12 @@
 #!/bin/bash
-# Author : Tech-Alchemist.Github.Io
+# Author : Abhishek @ EchtOps
 # deploy.bash : Start/Stop the Deployment.
 
 ## Root Check ##
 [[ "$(id -u)"  != "0" ]] && { echo "[-] Please Run From Root Access." ; exit 1 ;}
 
-ops_dir="/opt/opsworks/deploy/bins"
-logfile="/var/log/deploy/deploy.log"
+ops_dir="/opt/echtops/vanilla-deploy/bins"
+logfile="/var/log/echtops/vanilla-deploy.log"
 cd $ops_dir
 
 shopt -s expand_aliases
@@ -90,7 +90,7 @@ done
 
 deploy_main  2>>  "$logfile"
 
-echo "[+] `date` : DeployTool Started" >> "$logfile"
+echo "[+] `date` : Vanilla Deploy Started" >> "$logfile"
 echo -ne "\n\e[36m[+]\e[0m Deployment [\e[32mStarted\e[0m] on `date` \n    LogFile => \e[35m$logfile\e[0m\n"
 
 ## Thats All Folks ##
